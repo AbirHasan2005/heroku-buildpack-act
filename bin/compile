@@ -1,15 +1,15 @@
 #!/bin/bash
 
 echo ""
+echo "-----> Installing act buildpack ..."
 
-BUILD_DIR=${1:-}
+BUILD_DIR=$1
 VENDOR_DIR="vendor"
 ACT_VERSION=v0.2.26
 ACT_FILE_NAME=act_Linux_arm64.tar.gz
 DOWNLOAD_LINK=https://github.com/nektos/act/releases/download/$ACT_VERSION/$ACT_FILE_NAME
 
-echo "-----> Downloading ACT Binary ..."
-echo ""
+echo "       - Downloading act binary ..."
 cd $BUILD_DIR
 mkdir -p $VENDOR_DIR
 cd $VENDOR_DIR
@@ -18,24 +18,21 @@ cd act
 code=$(curl "$DOWNLOAD_LINK" -L --silent --fail --retry 5 --retry-max-time 15 -o ./$ACT_FILE_NAME --write-out "%{http_code}")
 
 if [ "$code" != "200" ]; then
-  echo "-----> Failed to download act binary ..."
-  echo "       Error: $code" && exit 1
+  echo "       - Failed to download act binary ..."
+  echo "         - Error: $code" && exit 1
 fi
 
-echo "-----> Unpacking ACT Binary ..."
-echo ""
-tar -xvf "./$ACT_FILE_NAME"
+echo "       - Unpacking act binary ..."
+tar -xzf "./$ACT_FILE_NAME"
 
 if [ "$?" != "0" ]; then
-  echo "-----> Failed to unpack ..." && exit 1
+  echo "       - Failed to unpack ..." && exit 1
 fi
 
-echo "-----> Building Runtime Environment for ACT ..."
+echo "       - Adding act to /usr/bin ..."
+cp -v act /usr/bin
 rm $ACT_FILE_NAME
-echo ""
-PROFILE_PATH="$BUILD_DIR/.profile.d/act.sh"
-mkdir -p $(dirname $PROFILE_PATH)
-echo 'export PATH="$PATH:${HOME}/vendor/act/act"' >> $PROFILE_PATH
 
-echo "-----> Successfully Installed ACT Buildpack !!"
+echo ""
+echo "-----> Successfully installed act buildpack ..."
 echo ""
