@@ -1,4 +1,4 @@
-# heroku-buildpack-act (In Development)
+# heroku-buildpack-act
 Heroku [Custom Buildpack](http://devcenter.heroku.com/articles/buildpacks) for [act](https://github.com/nektos/act)
 
 ## Usage
