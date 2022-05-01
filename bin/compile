@@ -44,7 +44,7 @@ if [ "$?" != "0" ]; then
   echo "       - Failed to unpack ..." && exit 1
 fi
 chmod 755 act
-rm $ACT_FILE_NAME
+rm -rf $ACT_FILE_NAME
 
 echo "       - Unpacking docker binary ..."
 mkdir temp
@@ -54,7 +54,7 @@ if [ "$?" != "0" ]; then
 fi
 chmod 755 temp/docker/*
 mv temp/docker/* .
-rm temp $DOCKER_FILE_NAME
+rm -rf temp $DOCKER_FILE_NAME
 
 # --- Add Binaries --- #
 echo "       - Adding act to PATH ..."
