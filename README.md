@@ -4,7 +4,7 @@ Heroku [Custom Buildpack](http://devcenter.heroku.com/articles/buildpacks) for [
 ## Usage
 - Heroku-CLI Command:
 ```shell
-heroku add:buildpacks https://github.com/AbirHasan2005/heroku-buildpack-act.git
+heroku buildpacks:add https://github.com/AbirHasan2005/heroku-buildpack-act.git
 ```
 
 ## Copyright
