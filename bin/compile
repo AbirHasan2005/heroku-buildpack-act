@@ -25,7 +25,7 @@ echo "       - Downloading act binary ..."
 code=$(curl "$ACT_DOWNLOAD_LINK" -L --silent --fail --retry 5 --retry-max-time 15 -o ./$ACT_FILE_NAME --write-out "%{http_code}")
 
 echo "       - Downloading docker binary ..."
-code2=$(curl "$DOCKER_DOWNLOAD_LINK" -L --silent --fail --retry 5 --retry-max-time 15 -o ./$ACT_FILE_NAME --write-out "%{http_code}")
+code2=$(curl "$DOCKER_DOWNLOAD_LINK" -L --silent --fail --retry 5 --retry-max-time 15 -o ./$DOCKER_FILE_NAME --write-out "%{http_code}")
 
 if [ "$code" != "200" ]; then
   echo "       - Failed to download act binary ..."
