@@ -35,7 +35,7 @@ rm $ACT_FILE_NAME
 echo ""
 PROFILE_PATH="$BUILD_DIR/.profile.d/act.sh"
 mkdir -p $(dirname $PROFILE_PATH)
-echo 'export PATH="$PATH:${HOME}/vendor/act"' >> $PROFILE_PATH
+echo 'export PATH="$PATH:${HOME}/vendor/act/act"' >> $PROFILE_PATH
 
 echo "-----> Successfully Installed ACT Buildpack !!"
 echo ""
