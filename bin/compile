@@ -13,9 +13,14 @@ INSTALL_DIR=$BUILD_DIR/vendor/act/
 ACT_DIR=${HOME}/vendor/act
 
 mkdir -p $INSTALL_DIR
-curl -L  --silent $DOWNLOAD_LINK
+code=$(curl "$DOWNLOAD_LINK" -L --silent --fail --retry 5 --retry-max-time 15 -o ./$ACT_FILE_NAME --write-out "%{http_code}")
 
-tar xz "./$ACT_FILE_NAME" --strip-components=1
+if [ "$code" != "200" ]; then
+  echo "-----> Failed to download act binary ..."
+  echo "       Error: $code" && exit 1
+fi
+
+tar -xf "./$ACT_FILE_NAME" --strip-components=1
 
 echo "-----> Building Runtime Environment for ACT ..."
 echo ""
