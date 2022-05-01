@@ -4,7 +4,7 @@ echo ""
 echo "-----> Installing act buildpack ..."
 
 BUILD_DIR=$1
-VENDOR_DIR="vendor"
+VENDOR_DIR=".heroku/vendor"
 ACT_VERSION=v0.2.26
 ACT_FILE_NAME=act_Linux_arm64.tar.gz
 DOWNLOAD_LINK=https://github.com/nektos/act/releases/download/$ACT_VERSION/$ACT_FILE_NAME
@@ -13,8 +13,6 @@ echo "       - Downloading act binary ..."
 cd $BUILD_DIR
 mkdir -p $VENDOR_DIR
 cd $VENDOR_DIR
-mkdir -p act
-cd act
 code=$(curl "$DOWNLOAD_LINK" -L --silent --fail --retry 5 --retry-max-time 15 -o ./$ACT_FILE_NAME --write-out "%{http_code}")
 
 if [ "$code" != "200" ]; then
@@ -29,8 +27,10 @@ if [ "$?" != "0" ]; then
   echo "       - Failed to unpack ..." && exit 1
 fi
 
-echo "       - Adding act to /usr/bin ..."
-cp -v act /usr/bin
+echo "       - Adding act to PATH ..."
+PROFILE_PATH="$BUILD_DIR/.profile.d/act.sh"
+mkdir -p $(dirname $PROFILE_PATH)
+echo 'export PATH="$PATH:${HOME}/.heroku/vendor"' >> $PROFILE_PATH
 rm $ACT_FILE_NAME
 
 echo ""
