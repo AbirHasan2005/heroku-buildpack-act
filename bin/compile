@@ -1,19 +1,23 @@
 #!/bin/bash
 
+echo ""
 echo "-----> Installing ACT Heroku Buildpack ..."
 echo ""
 
 BUILD_DIR=$1
 ACT_VERSION=v0.2.26
-DOWNLOAD_LINK=https://github.com/nektos/act/releases/download/$ACT_VERSION/act_Linux_arm64.tar.gz
+ACT_FILE_NAME=act_Linux_arm64.tar.gz
+DOWNLOAD_LINK=https://github.com/nektos/act/releases/download/$ACT_VERSION/$ACT_FILE_NAME
 
 INSTALL_DIR=$BUILD_DIR/vendor/act/
 ACT_DIR=${HOME}/vendor/act
 
 mkdir -p $INSTALL_DIR
-curl -L  --silent $DOWNLOAD_LINK | tar xz --strip-components=1
+curl -L  --silent $DOWNLOAD_LINK
 
-echo "-----> Building runtime environment for ACT ..."
+tar xz "./$ACT_FILE_NAME" --strip-components=1
+
+echo "-----> Building Runtime Environment for ACT ..."
 echo ""
 PROFILE_PATH="$BUILD_DIR/.profile.d/act.sh"
 mkdir -p $(dirname $PROFILE_PATH)
