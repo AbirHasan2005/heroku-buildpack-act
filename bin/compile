@@ -6,7 +6,8 @@ echo "-----> Installing act buildpack ..."
 BUILD_DIR=$1
 VENDOR_DIR=".heroku/vendor"
 ACT_VERSION=v0.2.26
-ACT_FILE_NAME=act_Linux_arm64.tar.gz
+ACT_ARCH=x86_64
+ACT_FILE_NAME=act_Linux_$ACT_ARCH.tar.gz
 DOWNLOAD_LINK=https://github.com/nektos/act/releases/download/$ACT_VERSION/$ACT_FILE_NAME
 
 echo "       - Downloading act binary ..."
