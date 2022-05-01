@@ -24,7 +24,7 @@ fi
 
 echo "-----> Unpacking ACT Binary ..."
 echo ""
-tar -xf "./$ACT_FILE_NAME" --strip-components=1
+tar -xvf "./$ACT_FILE_NAME"
 
 if [ "$?" != "0" ]; then
   echo "-----> Failed to unpack ..." && exit 1
