@@ -5,31 +5,65 @@ echo "-----> Installing act buildpack ..."
 
 BUILD_DIR=$1
 VENDOR_DIR=".heroku/vendor"
-ACT_VERSION=v0.2.26
+
+ACT_VERSION=0.2.26
 ACT_ARCH=x86_64
 ACT_FILE_NAME=act_Linux_$ACT_ARCH.tar.gz
-DOWNLOAD_LINK=https://github.com/nektos/act/releases/download/$ACT_VERSION/$ACT_FILE_NAME
+ACT_DOWNLOAD_LINK=https://github.com/nektos/act/releases/download/v$ACT_VERSION/$ACT_FILE_NAME
 
-echo "       - Downloading act binary ..."
+DOCKER_VERSION=20.10.9
+DOCKER_ARCH=x86_64
+DOCKER_FILE_NAME=docker-$DOCKER_VERSION.tgz
+DOCKER_DOWNLOAD_LINK=https://download.docker.com/linux/static/stable/$DOCKER_ARCH/$DOCKER_FILE_NAME
+
 cd $BUILD_DIR
 mkdir -p $VENDOR_DIR
 cd $VENDOR_DIR
-code=$(curl "$DOWNLOAD_LINK" -L --silent --fail --retry 5 --retry-max-time 15 -o ./$ACT_FILE_NAME --write-out "%{http_code}")
+
+# --- Download Binaries --- #
+echo "       - Downloading act binary ..."
+code=$(curl "$ACT_DOWNLOAD_LINK" -L --silent --fail --retry 5 --retry-max-time 15 -o ./$ACT_FILE_NAME --write-out "%{http_code}")
+
+echo "       - Downloading docker binary ..."
+code2=$(curl "$DOCKER_DOWNLOAD_LINK" -L --silent --fail --retry 5 --retry-max-time 15 -o ./$ACT_FILE_NAME --write-out "%{http_code}")
 
 if [ "$code" != "200" ]; then
   echo "       - Failed to download act binary ..."
   echo "         - Error: $code" && exit 1
 fi
 
+if [ "$code2" != "200" ]; then
+  echo "       - Failed to download docker binary ..."
+  echo "         - Error: $code" && exit 1
+fi
+
+# --- Unpack Binaries --- #
 echo "       - Unpacking act binary ..."
 tar -xzf "./$ACT_FILE_NAME"
-
 if [ "$?" != "0" ]; then
   echo "       - Failed to unpack ..." && exit 1
 fi
+chmod 755 act
+rm $ACT_FILE_NAME
 
+echo "       - Unpacking docker binary ..."
+mkdir temp
+tar -xzf "./$DOCKER_FILE_NAME" -C temp
+if [ "$?" != "0" ]; then
+  echo "       - Failed to unpack ..." && exit 1
+fi
+chmod 755 temp/docker/*
+mv temp/docker/* .
+rm temp $DOCKER_FILE_NAME
+
+# --- Add Binaries --- #
 echo "       - Adding act to PATH ..."
 PROFILE_PATH="$BUILD_DIR/.profile.d/act.sh"
+mkdir -p $(dirname $PROFILE_PATH)
+echo 'export PATH="$PATH:${HOME}/.heroku/vendor"' >> $PROFILE_PATH
+
+echo "       - Adding docker to PATH ..."
+PROFILE_PATH="$BUILD_DIR/.profile.d/docker.sh"
 mkdir -p $(dirname $PROFILE_PATH)
 echo 'export PATH="$PATH:${HOME}/.heroku/vendor"' >> $PROFILE_PATH
 rm $ACT_FILE_NAME
